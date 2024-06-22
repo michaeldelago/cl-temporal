@@ -1,0 +1,26 @@
+// Copyright 2020 Google LLC
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file or at
+// https://opensource.org/licenses/MIT.
+
+syntax = "proto2";
+
+package service_test_pb;
+
+message BarRequest {
+}
+
+message BarResponse {
+}
+
+service FooService {
+  rpc BarMethod(BarRequest) returns (BarResponse) {
+    option deadline = 30.0;
+    option duplicate_suppression = true;
+    option client_logging = -123;
+    option security_level = PRIVACY_AND_INTEGRITY;
+    option security_label = "admin";
+    option legacy_client_initial_tokens = 42;
+  }
+}

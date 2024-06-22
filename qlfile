@@ -1,0 +1,8 @@
+github qitab/cl-protobufs
+github michaeldelago/grpc :branch client-deadline
+ql serapeum
+ql alexandria
+ql log4cl
+ql log4cl-extras
+ql bordeaux-threads
+ql eager-future2

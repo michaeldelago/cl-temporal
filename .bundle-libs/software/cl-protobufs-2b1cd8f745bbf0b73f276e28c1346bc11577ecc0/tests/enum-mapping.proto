@@ -1,0 +1,112 @@
+// Copyright 2020 Google LLC
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file or at
+// https://opensource.org/licenses/MIT.
+
+// LINT: LEGACY_NAMES
+
+syntax = "proto2";
+
+package enum_mapping_test;
+
+message MyOtherMessage {
+  optional MyMessage.MyEnum other_enum = 1;
+}
+
+message MyMessage {
+  enum MyEnum {
+    option allow_alias = true;
+
+    FOO = 1;
+    BAR = 2;
+    BAZ = 2;
+    FOO_BAR = 3;
+    ZAPHOD = 42;
+  }
+}
+
+enum OuterEnum {
+  option allow_alias = true;
+
+  FOO = 11;
+  BAR = 12;
+  BAZ = 12;
+  ZAPHOD = 142;
+}
+
+enum AnotherEnum {
+  ONE = 1;
+  TWO = 2;
+  THREE = 3;
+}
+
+enum MakeDifferentEnumVals {
+  ANY = 0;
+  _PIKA = 1;
+  _100 = 2;
+  _300 = 3;
+  _300_100 = 4;
+  _300_CHAR = 5;
+  _MANDER_400 = 6;
+  CHAR_300MANDER = 7;
+}
+
+enum LargeDenseEnum {
+  B2 = 1;
+  C3 = 2;
+  D4 = 3;
+  E5 = 4;
+  F6 = 5;
+  G7 = 6;
+  H8 = 7;
+  I9 = 8;
+  J10 = 9;
+  K11 = 10;
+  L12 = 11;
+  M13 = 12;
+  N14 = 13;
+  O15 = 14;
+}
+
+enum SmallDenseEnum {
+  BB2 = 1;
+  CC3 = 2;
+  DD4 = 3;
+  EE5 = 4;
+  FF6 = 5;
+  GG7 = 6;
+  HH8 = 7;
+  II9 = 8;
+}
+
+enum LargeSparseEnum {
+  option allow_alias = true;
+
+  P16 = 20000;
+  Q17 = 40000;
+  R18 = 80000;
+  S19 = 160000;
+  T20 = 5000;
+  U21 = 200000;
+  V22 = 250000;
+  ALIAS_ONE = 10000;
+  ALIAS_TWO = 20000;
+  _W23 = 60000;
+  X24 = 70000;
+  Y25 = 1280000;
+}
+
+enum SmallSparseEnum {
+  option allow_alias = true;
+
+  PP16 = 200000;
+  RR18 = 800000;
+  TT20 = 50000;
+  UU21 = 2000000;
+  VV22 = 2500000;
+  ALIAS_THREE = 100000;
+  ALIAS_FOUR = 200000;
+  _WW23 = 600000;
+  YY25 = 12800000;
+}

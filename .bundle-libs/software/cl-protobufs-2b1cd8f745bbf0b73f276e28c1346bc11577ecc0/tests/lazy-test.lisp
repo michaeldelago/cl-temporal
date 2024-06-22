@@ -1,0 +1,219 @@
+;;; Copyright 2020 Google LLC
+;;;
+;;; Use of this source code is governed by an MIT-style
+;;; license that can be found in the LICENSE file or at
+;;; https://opensource.org/licenses/MIT.
+
+(defpackage #:cl-protobufs.test.lazy
+  (:use #:cl
+        #:clunit
+        #:cl-protobufs.third-party.lisp.cl-protobufs.tests)
+  (:local-nicknames (#:pi #:cl-protobufs.implementation)
+                    (#:proto #:cl-protobufs))
+  (:export :run))
+
+(in-package #:cl-protobufs.test.lazy)
+
+(defsuite lazy-suite (cl-protobufs.test:root-suite))
+
+(defun run (&key use-debugger)
+  "Run all tests in the test suite.
+Parameters
+  USE-DEBUGGER: On assert failure bring up the debugger."
+  (clunit:run-suite 'lazy-suite :use-debugger use-debugger
+                                :signal-condition-on-fail t))
+
+
+(deftest test-lazy-field-schema (lazy-suite)
+  (let* ((container-message (proto:find-message-descriptor 'container))
+         (container-fields (proto:proto-fields container-message))
+         (inner-field (find 'inner container-fields
+                            :key #'proto:proto-external-field-name)))
+    (assert-true (pi::proto-lazy-p inner-field))))
+
+(deftest test-lazy-field-serialize (lazy-suite)
+  (dolist (optimized '(nil t))
+      (when optimized
+        (pi::make-deserializer container)
+        (pi::make-deserializer inner)
+        (pi::make-serializer container)
+        (pi::make-serializer inner))
+    (let* ((proto (make-container
+                   :value-before 10
+                   :inner (make-inner :value 42)
+                   :value-after 20))
+           (bytes (proto:serialize-to-bytes proto))
+           (restored (proto:deserialize-from-bytes 'container bytes)))
+
+      ;; The original proto doesn't have encoded field.
+      (assert-false (proto:encoded-field proto 'inner))
+      ;; The deserialized proto does have encoded field.
+      (assert-true (proto:encoded-field restored 'inner))
+
+      ;; If the encoded field is deserialized independently, we get the correct result.
+      (let ((inner (proto:deserialize-from-bytes
+                    'inner
+                    (proto:encoded-field restored 'inner))))
+        (assert-equal 42 (value inner)))
+      ;; If the field is accessed, it's deserialized lazily.
+      (assert-eql 42 (value (inner restored)))
+
+      ;; Verify fields around the lazy field are restored correctly.
+      (assert-eql 10 (value-before restored))
+      (assert-eql 20 (value-after restored))
+
+      ;; Ensure that editing a lazy field clears the %%BYTES slot.
+      (let ((restored (proto:deserialize-from-bytes 'container bytes))
+            (inner-slot 'cl-protobufs.third-party.lisp.cl-protobufs.tests::%inner))
+        (setf (value (inner restored)) 43)
+        (assert-false (slot-value (slot-value restored inner-slot) 'pi::%%bytes))
+        (let* ((reserialized (proto:serialize-to-bytes restored))
+               (rerestored (proto:deserialize-from-bytes 'container reserialized)))
+          (assert-eql 43 (value (inner rerestored)))))
+
+
+      ;; Serialize the restored proto again and verify it's the same as the originally serialized
+      ;; value.
+      (let ((restored (proto:deserialize-from-bytes 'container bytes)))
+        (assert-equalp bytes (proto:serialize-to-bytes restored))))))
+
+(deftest test-lazy-oneof-serialize (lazy-suite)
+  (dolist (optimized '(nil t))
+    (when optimized
+      (pi::make-deserializer oneof-lazy)
+      (pi::make-deserializer inner)
+      (pi::make-serializer oneof-lazy)
+      (pi::make-serializer inner))
+    (let* ((proto (make-oneof-lazy
+                   :value-before 10
+                   :inner (make-inner :value 42)
+                   :value-after 20))
+           (bytes (proto:serialize-to-bytes proto))
+           (restored (proto:deserialize-from-bytes 'oneof-lazy bytes))
+           (slot 'cl-protobufs.third-party.lisp.cl-protobufs.tests::%lazy-oneof))
+      ;; The original proto doesn't have encoded field.
+      (assert-false (pi::proto-%%bytes (pi::oneof-value (slot-value proto slot))))
+      ;; The deserialized proto does have encoded field.
+      (assert-true (pi::proto-%%bytes (pi::oneof-value (slot-value restored slot))))
+
+      ;; If the encoded field is deserialized independently, we get the correct result.
+      (let ((inner (proto:deserialize-from-bytes
+                    'inner
+                    (pi::proto-%%bytes (pi::oneof-value (slot-value restored slot))))))
+        (assert-eql 42 (value inner)))
+      ;; If the field is accessed, it's deserialized lazily.
+      (assert-eql 42 (value (inner restored)))
+
+      ;; Verify fields around the lazy field are restored correctly.
+      (assert-eql 10 (value-before restored))
+      (assert-eql 20 (value-after restored))
+
+      ;; Serialize the restored proto again and verify it's the same as the originally serialized
+      ;; value.
+      (let ((restored (proto:deserialize-from-bytes 'oneof-lazy bytes)))
+        (assert-equalp bytes (proto:serialize-to-bytes restored))))))
+
+(deftest test-recursive-lazy (lazy-suite)
+  (dolist (optimized '(nil t))
+    (when optimized
+      (pi::make-deserializer recursively-lazy)
+      (pi::make-deserializer container2)
+      (pi::make-serializer recursively-lazy)
+      (pi::make-serializer container2))
+    (let* ((inner (make-inner :value 123))
+           (rec-lazy (make-recursively-lazy :inner inner))
+           (container2 (make-container2 :rec-lazy rec-lazy))
+           (cntnr-bytes (proto:serialize-to-bytes container2))
+           (restored-cntnr (proto:deserialize-from-bytes 'container2 cntnr-bytes)))
+      (assert-true (proto:encoded-field restored-cntnr 'rec-lazy))
+      (let ((restored-rec-lazy (rec-lazy restored-cntnr)))
+        (assert-true (proto:encoded-field restored-rec-lazy 'inner)))
+      ;; Calling accessors in chain for lazy fields works.
+      (assert-eql 123 (value (inner (rec-lazy restored-cntnr)))))))
+
+(deftest test-write-lazy-fields (lazy-suite)
+  (dolist (optimized '(nil t))
+    (when optimized
+      (pi::make-deserializer container)
+      (pi::make-deserializer inner)
+      (pi::make-serializer container)
+      (pi::make-serializer inner))
+    (let* ((proto (make-container
+                   :value-before 10
+                   :inner (make-inner :value 42)
+                   :value-after 20))
+           (bytes (proto:serialize-to-bytes proto)))
+      ;; Updating the lazy field with a new value will invalidate the encoded field.
+      (let ((restored (proto:deserialize-from-bytes 'container bytes)))
+        (setf (inner restored) (make-inner :value 1234))
+        (assert-false (proto:encoded-field restored 'inner))
+        ;; If serialized and deserialized again, the new value should be found.
+        (let ((updated-restored
+                (proto:deserialize-from-bytes 'container
+                                              (proto:serialize-to-bytes restored))))
+          (assert-true (proto:encoded-field updated-restored 'inner))
+          (assert-eql 1234 (value (inner updated-restored)))))
+
+      ;; Mutating the proto object for the lazy field also works.
+      (let ((restored (proto:deserialize-from-bytes 'container bytes)))
+        (setf (value (inner restored)) 5678)
+        (assert-false (proto:encoded-field restored 'inner))
+        (let ((updated-restored
+                (proto:deserialize-from-bytes 'container
+                                              (proto:serialize-to-bytes restored))))
+          (assert-true (proto:encoded-field updated-restored 'inner))
+          (assert-eql 5678 (value (inner updated-restored))))))))
+
+(deftest test-required-lazy (lazy-suite)
+  (dolist (optimized '(nil t))
+    (when optimized
+      (pi::make-serializer inner)
+      (pi::make-serializer required-lazy)
+      (pi::make-deserializer inner)
+      (pi::make-deserializer required-lazy))
+    (let* ((proto (make-required-lazy
+                   :inner (make-inner :value 42)))
+           (bytes (proto:serialize-to-bytes proto))
+           (restored (proto:deserialize-from-bytes 'required-lazy bytes)))
+      (assert-eql 42 (value (inner restored))))))
+
+(deftest test-repeated-lazy (lazy-suite)
+  (dolist (optimized '(nil t))
+    (when optimized
+      (pi::make-serializer inner)
+      (pi::make-serializer repeated-lazy)
+      (pi::make-deserializer inner)
+      (pi::make-deserializer repeated-lazy))
+    (let* ((inners (loop for i from 0 below 5 collect (make-inner :value i)))
+           (proto (make-repeated-lazy :inners inners))
+           (bytes (proto:serialize-to-bytes proto))
+           (restored (proto:deserialize-from-bytes 'repeated-lazy bytes))
+           (encoded-bytes (proto:encoded-field restored 'inners)))
+      (assert-eql 5 (length encoded-bytes))
+      (assert-true (every #'identity encoded-bytes))
+      ;; Check each instance in the repeated field.  They are lazily deserialized.
+      (let ((restored-inners (inners restored)))
+        (assert-eql 5 (length restored-inners))
+        (mapc (lambda (inner index)
+                (assert-eql (value inner) index))
+              restored-inners
+              '(0 1 2 3 4)))
+      ;; Now they don't have encoded bytes anymore.
+      (assert-true (every #'null (proto:encoded-field restored 'inners)))
+      ;; If encoded bytes are deserialized, we get the correct results.
+      (mapc (lambda (inner-bytes index)
+              (let ((inner (proto:deserialize-from-bytes 'inner inner-bytes)))
+                (assert-eql (value inner) index)))
+            encoded-bytes
+            '(0 1 2 3 4))
+
+      ;; Serialize the restored proto again and verify it's the same as the originally serialized
+      ;; value.
+      (let ((restored (proto:deserialize-from-bytes 'repeated-lazy bytes)))
+        (assert-equalp bytes (proto:serialize-to-bytes restored))))))
+
+;; Checks that the accessors work for empty lazy fields.
+(deftest test-empty-lazy (lazy-suite)
+  (let ((proto (make-container)))
+    (assert-false (container.inner proto))
+    (assert-false (inner proto))))

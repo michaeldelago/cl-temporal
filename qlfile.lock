@@ -1,0 +1,36 @@
+("quicklisp" .
+ (:class qlot/source/dist:source-dist
+  :initargs (:distribution "https://beta.quicklisp.org/dist/quicklisp.txt" :%version :latest)
+  :version "2023-10-21"))
+("cl-protobufs" .
+ (:class qlot/source/github:source-github
+  :initargs (:repos "qitab/cl-protobufs" :ref nil :branch nil :tag nil)
+  :version "github-2b1cd8f745bbf0b73f276e28c1346bc11577ecc0"))
+("grpc" .
+ (:class qlot/source/github:source-github
+  :initargs (:repos "michaeldelago/grpc" :ref nil :branch "client-deadline" :tag nil)
+  :version "github-d0f2806f507dd19c73c1f920dd49b360ea5839d3"))
+("serapeum" .
+ (:class qlot/source/ql:source-ql
+  :initargs (:%version :latest)
+  :version "ql-2023-10-21"))
+("alexandria" .
+ (:class qlot/source/ql:source-ql
+  :initargs (:%version :latest)
+  :version "ql-2023-10-21"))
+("log4cl" .
+ (:class qlot/source/ql:source-ql
+  :initargs (:%version :latest)
+  :version "ql-2023-10-21"))
+("log4cl-extras" .
+ (:class qlot/source/ql:source-ql
+  :initargs (:%version :latest)
+  :version "ql-2023-10-21"))
+("bordeaux-threads" .
+ (:class qlot/source/ql:source-ql
+  :initargs (:%version :latest)
+  :version "ql-2023-10-21"))
+("eager-future2" .
+ (:class qlot/source/ql:source-ql
+  :initargs (:%version :latest)
+  :version "ql-2023-10-21"))

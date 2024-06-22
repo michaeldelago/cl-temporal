@@ -1,0 +1,60 @@
+// Copyright 2020 Google LLC
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file or at
+// https://opensource.org/licenses/MIT.
+
+syntax = "proto2";
+
+package test_proto;
+
+import "proto2-descriptor-extensions.proto"; // descriptor extension
+
+enum TextEnumValues {
+  NONE = 0;
+  TWENTY_ONE = 21;
+}
+
+message TextFormatTest {
+  optional int32 int_field = 1;
+  optional sint32 sint_field = 2;
+  optional uint32 uint_field = 3;
+  optional float float_field = 4;
+  optional double double_field = 5;
+  optional string string_field = 6;
+  repeated string string_fields = 7;
+  reserved 8;
+  reserved 9, 10;
+  /* comment */ optional uint32 embedded_comment_a = 11;
+  optional /* comment */ uint32 embedded_comment_b = 12;
+  optional uint32 /* comment */ embedded_comment_c = 13;
+  optional uint32 embedded_comment_d /* comment */ = 14;
+  optional uint32 embedded_comment_e = /* comment */ 15;
+  optional uint32 embedded_comment_f = 16 /* comment */;
+  optional uint32 embedded_comment_g = 17; /* comment */
+  message NestedMessage1 {
+    optional int32 int_field = 1;
+    message NestedMessage2 {
+      optional int32 int_field = 2;
+    }
+    optional NestedMessage2 message_2 = 2;
+    repeated NestedMessage1 repeated_message = 4;
+  }
+
+  optional NestedMessage1 one_level_nesting = 18;
+  repeated TextEnumValues enum_vals = 19;
+  optional NestedMessage1.NestedMessage2 two_level_nesting = 20;
+  oneof TestOneof {
+    int32 oneof_int_field = 21;
+    string oneof_string_field = 22;
+  }
+  map<int32,string> map_field = 23;
+  optional bytes bytes_field = 24;
+  optional bool bool_field = 25;
+  optional int64 int64_field = 26;
+  optional sint64 sint64_field = 27;
+  repeated int32 int_vals = 28;
+  repeated string symbol_field = 29 [(lisp_type) = "CL:SYMBOL"];
+  optional string symbol_field2 = 30 [(lisp_type) = "CL:SYMBOL"];
+  repeated NestedMessage1 repeated_message = 31;
+}
