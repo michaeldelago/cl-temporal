@@ -1,5 +1,0 @@
-* cl-temporal
-
-** Usage
-
-** Installation
