@@ -36,11 +36,11 @@
      ,@body))
 
 (defmethod register-activity ((worker worker) activity-name)
-  (let ((activity-class (gethash activity-name cl-temporal.activity:created-activities)))
+  (let ((activity-class (gethash activity-name cl-temporal.activity:*created-activities*)))
     (setf (gethash activity-name (activities worker)) activity-class)))
 
 (defmethod register-workflow ((worker worker) workflow-name)
-  (let ((wf-class (gethash workflow-name cl-temporal.workflow:created-workflows)))
+  (let ((wf-class (gethash workflow-name cl-temporal.workflow:*created-workflows*)))
     (setf (gethash workflow-name (workflows worker)) wf-class)))
 
 (defmethod complete-workflow-activation ((worker worker) completion)

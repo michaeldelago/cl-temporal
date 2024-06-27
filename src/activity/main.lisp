@@ -1,5 +1,7 @@
 (in-package :cl-temporal.activity)
 
+(serapeum.exporting:defparameter *created-activities* (serapeum:dict))
+
 (serapeum.exporting:defclass activity (cl-temporal:executable)
   ((name
     :initarg :name

@@ -2,10 +2,10 @@
  (:class qlot/source/dist:source-dist
   :initargs (:distribution "https://beta.quicklisp.org/dist/quicklisp.txt" :%version :latest)
   :version "2023-10-21"))
-("cl-protobufs" .
+("qitab-cl-protobufs" .
  (:class qlot/source/github:source-github
-  :initargs (:repos "qitab/cl-protobufs" :ref nil :branch nil :tag nil)
-  :version "github-2b1cd8f745bbf0b73f276e28c1346bc11577ecc0"))
+  :initargs (:repos "michaeldelago/qitab-cl-protobufs" :ref nil :branch "proto-source-file-pathname" :tag nil)
+  :version "github-25acbbfca4a98db2c65231c35bc82c879aaa55b0"))
 ("grpc" .
  (:class qlot/source/github:source-github
   :initargs (:repos "michaeldelago/grpc" :ref nil :branch "client-deadline" :tag nil)
@@ -34,3 +34,7 @@
  (:class qlot/source/ql:source-ql
   :initargs (:%version :latest)
   :version "ql-2023-10-21"))
+("dissect" .
+ (:class qlot/source/git:source-git
+  :initargs (:remote-url "https://github.com/shinmera/dissect")
+  :version "git-a70cabcd748cf7c041196efd711e2dcca2bbbb2c"))

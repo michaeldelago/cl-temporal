@@ -17,8 +17,6 @@ software/cl-annot-20150608-git/cl-annot.asd
 software/cl-base64-20201016-git/cl-base64.asd
 software/cl-ppcre-20230618-git/cl-ppcre-unicode.asd
 software/cl-ppcre-20230618-git/cl-ppcre.asd
-software/cl-protobufs-2b1cd8f745bbf0b73f276e28c1346bc11577ecc0/cl-protobufs.asdf.asd
-software/cl-protobufs-2b1cd8f745bbf0b73f276e28c1346bc11577ecc0/cl-protobufs.asd
 software/cl-strings-20210411-git/cl-strings.asd
 software/cl-syntax-20150407-git/cl-syntax-annot.asd
 software/cl-syntax-20150407-git/cl-syntax-anonfun.asd
@@ -28,7 +26,7 @@ software/cl-syntax-20150407-git/cl-syntax-interpol.asd
 software/cl-syntax-20150407-git/cl-syntax-markup.asd
 software/cl-syntax-20150407-git/cl-syntax.asd
 software/closer-mop-20231021-git/closer-mop.asd
-software/dissect-20231021-git/dissect.asd
+software/dissect-ref-a70cabcd748cf7c041196efd711e2dcca2bbbb2c/dissect.asd
 software/doc-20231021-git/40ants-doc-full.asd
 software/doc-20231021-git/40ants-doc-test.asd
 software/doc-20231021-git/40ants-doc.asd
@@ -42,7 +40,7 @@ software/float-features-20231021-git/float-features-tests.asd
 software/float-features-20231021-git/float-features.asd
 software/global-vars-20141106-git/global-vars-test.asd
 software/global-vars-20141106-git/global-vars.asd
-software/grpc-d0f2806f507dd19c73c1f920dd49b360ea5839d3/grpc.asd
+software/grpc-8b142ed20ec838c0e8480ceb71671d0852c500e2/grpc.asd
 software/introspect-environment-20220220-git/introspect-environment-test.asd
 software/introspect-environment-20220220-git/introspect-environment.asd
 software/iterate-release-b0f9a9c6-git/iterate.asd
@@ -71,6 +69,8 @@ software/parse-number-v1.7/parse-number.asd
 software/proc-parse-20190813-git/proc-parse-test.asd
 software/proc-parse-20190813-git/proc-parse.asd
 software/pythonic-string-reader-20180711-git/pythonic-string-reader.asd
+software/qitab-cl-protobufs-25acbbfca4a98db2c65231c35bc82c879aaa55b0/cl-protobufs.asdf.asd
+software/qitab-cl-protobufs-25acbbfca4a98db2c65231c35bc82c879aaa55b0/cl-protobufs.asd
 software/rove-20231021-git/rove.asd
 software/serapeum-20231021-git/serapeum.asd
 software/split-sequence-v2.0.1/split-sequence.asd

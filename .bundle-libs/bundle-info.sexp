@@ -1,4 +1,4 @@
-(:CREATION-TIME #A((20) BASE-CHAR . "2024-06-22T00:31:46Z") :REQUESTED-SYSTEMS
+(:CREATION-TIME #A((20) BASE-CHAR . "2024-06-25T01:41:43Z") :REQUESTED-SYSTEMS
  ("cl-protobufs" "alexandria" "cl-base64" "cl-protobufs.asdf" "closer-mop"
   "float-features" "documentation-utils" "trivial-indent" "trivial-features"
   "local-time" "uiop" "trivial-garbage" "rove" "bordeaux-threads" "global-vars"
@@ -27,8 +27,8 @@
     "ql-2023-10-21")
    (:NAME "bordeaux-threads" :DIST-URL "qlot://localhost/bordeaux-threads.txt"
     :VERSION "ql-2023-10-21")
-   (:NAME "cl-protobufs" :DIST-URL "qlot://localhost/cl-protobufs.txt" :VERSION
-    "github-2b1cd8f745bbf0b73f276e28c1346bc11577ecc0")
+   (:NAME "dissect" :DIST-URL "qlot://localhost/dissect.txt" :VERSION
+    "git-a70cabcd748cf7c041196efd711e2dcca2bbbb2c")
    (:NAME "eager-future2" :DIST-URL "qlot://localhost/eager-future2.txt"
     :VERSION "ql-2023-10-21")
    (:NAME "grpc" :DIST-URL "qlot://localhost/grpc.txt" :VERSION
@@ -37,6 +37,9 @@
     :VERSION "ql-2023-10-21")
    (:NAME "log4cl" :DIST-URL "qlot://localhost/log4cl.txt" :VERSION
     "ql-2023-10-21")
+   (:NAME "qitab-cl-protobufs" :DIST-URL
+    "qlot://localhost/qitab-cl-protobufs.txt" :VERSION
+    "github-25acbbfca4a98db2c65231c35bc82c879aaa55b0")
    (:NAME "quicklisp" :DIST-URL
     "http://beta.quicklisp.org/dist/quicklisp/2023-10-21/distinfo.txt" :VERSION
     "2023-10-21")

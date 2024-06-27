@@ -27,6 +27,7 @@
                     :insecure t
                     :namespace "cl-dev"
                     :task-queue "foo-task")
+    (register-namespace "cl-dev")
     (let ((worker (make-instance 'worker :task-queue "foo-task" :namespace "cl-dev")))
       (register-workflow worker 'hello-world)
       ;; (register-activity worker 'Hello)

@@ -1,4 +1,4 @@
-github qitab/cl-protobufs
+github michaeldelago/qitab-cl-protobufs :branch proto-source-file-pathname
 github michaeldelago/grpc :branch client-deadline
 ql serapeum
 ql alexandria
@@ -6,3 +6,4 @@ ql log4cl
 ql log4cl-extras
 ql bordeaux-threads
 ql eager-future2
+git dissect https://github.com/shinmera/dissect

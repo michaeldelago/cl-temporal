@@ -1,6 +1,7 @@
-(defpackage cl-temporal
+(defpackage :cl-temporal
   (:use :cl)
   (:local-nicknames (:temporal.common :cl-protobufs.temporal.api.common.v1)
+                    (:temporal.enum :cl-protobufs.temporal.api.enums.v1)
                     (:temporal.batch :cl-protobufs.temporal.api.batch.v1)
                     (:temporal.command :cl-protobufs.temporal.api.command.v1)
                     (:temporal.errordetails :cl-protobufs.temporal.api.errordetails.v1)
